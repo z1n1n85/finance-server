@@ -3,19 +3,21 @@ import Account from "../schemes/account.js";
 class AccountController {
   async create(req, res) {
     try {
-      const {/*userName,*/ amountStart, amount, name} = req.body;
-      const account = await Account.create({/*userName,*/ amountStart, amount, name});
+      const {amountStart, amount, name} = req.body;
+      const userId = req.user.id;
+      const account = await Account.create({userId, amountStart, amount, name});
       return res.status(200).json(account);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
   async getAll(req, res) {
     try {
-      const account = await Account.find();
-      return res.status(200).json(account);
-    } catch (error) {
-      res.status(500).json(error);
+      const userId = req.user.id;
+      const accounts = await Account.find({userId});
+      return res.status(200).json(accounts);
+    } catch (e) {
+      next(e);
     }
   }
   async update(req, res) {
@@ -26,8 +28,8 @@ class AccountController {
       }
       const updateAccount = await Account.findByIdAndUpdate(account._id, account, {new: true});
       return res.status(200).json(updateAccount);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
   async delete(req, res) {
@@ -38,8 +40,8 @@ class AccountController {
       }
       const account = await Account.findByIdAndDelete(id);
       return res.status(200).json(account);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
 }

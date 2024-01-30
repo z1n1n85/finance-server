@@ -3,19 +3,21 @@ import Transaction from "../schemes/transaction.js";
 class TransactionController {
   async create(req, res) {
     try {
-      const {/*userName,*/ time, type, tags, cost, accountId, description} = req.body;
-      const transaction = await Transaction.create({/*userName,*/ time, type, tags, cost, accountId, description});
+      const {time, type, tags, cost, accountId, description} = req.body;
+      const userId = req.user.id;
+      const transaction = await Transaction.create({userId, time, type, tags, cost, accountId, description});
       return res.status(200).json(transaction);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
   async getAll(req, res) {
     try {
-      const transactions = await Transaction.find();
+      const userId = req.user.id;
+      const transactions = await Transaction.find({userId});
       return res.status(200).json(transactions);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
   async update(req, res) {
@@ -26,8 +28,8 @@ class TransactionController {
       }
       const updateTransaction = await Transaction.findByIdAndUpdate(transaction._id, transaction, {new: true});
       return res.status(200).json(updateTransaction);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
   async delete(req, res) {
@@ -38,8 +40,8 @@ class TransactionController {
       }
       const transaction = await Transaction.findByIdAndDelete(id);
       return res.status(200).json(transaction);
-    } catch (error) {
-      res.status(500).json(error);
+    } catch (e) {
+      next(e);
     }
   }
 }
