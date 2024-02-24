@@ -28,7 +28,7 @@ app.use(errorMiddlewares);
 async function startApp() {
   try {
     await mongoose.connect(process.env.DB_URL);
-    app.listen(PORT, () => console.log(`Сервер работает с портом ${PORT}`));
+    app.listen(PORT, () => console.log(`Сервер работает с портом ${PORT}. URL клиента: ${process.env.CLIENT_URL}`));
   } catch (error) {
     console.log(error);
   }
